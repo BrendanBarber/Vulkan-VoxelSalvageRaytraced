@@ -1,0 +1,245 @@
+# Visual Studio generated files
+*.vcxproj.user
+*.vcxproj.filters
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build outputs
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio cache/options directory
+.vs/
+
+# MSBuild Binary and Structured Log
+*.binlog
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio Trace Files
+*.e2e
+
+# TFS 2012 Local Workspace
+$tf/
+
+# ReSharper cache
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# CodeRush personal settings
+.cr/personal
+
+# Python tools for Visual Studio (PTVS)
+__pycache__/
+*.pyc
+
+# Cake - Uncomment if you are using it
+# tools/**
+# !tools/packages.config
+
+# NuGet Packages
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/[Pp]ackages/repositories.config
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Microsoft Azure Build Output
+csx/
+*.build.csdef
+
+# Microsoft Azure Emulator
+ecf/
+rcf/
+
+# Windows Store app package directories and files
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+# Linux
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# External dependencies (don't commit large libraries)
+external/
+libs/
+dependencies/
+
+# Compiled shaders (these should be generated)
+*.spv
+
+# Asset files (depending on your needs)
+# Uncomment these if you don't want to commit large assets
+# assets/textures/
+# assets/models/
+# assets/audio/
+
+# IDE specific files
+*.code-workspace
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# CMake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# vcpkg (if using)
+vcpkg_installed/
+
+# Conan (if using)
+conandata.yml
+conaninfo.txt
+conanbuildinfo.*
+
+# Package managers
+node_modules/
+.npm
+.yarn
+
+# Game specific
+save_data/
+screenshots/
+logs/
+crash_dumps/
+profiles/
+
+# Performance profiling
+*.prof
+*.trace
+
+# Documentation build
+docs/_build/
+site/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor backups
+*~
+*.bak
+*.orig
+
+# Archive files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+
+# Large binary files that shouldn't be in version control
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.pdb
+*.idb
+*.ilk
+
+# But allow essential DLLs if needed for distribution
+!essential_dlls/
+!redistributables/
+
+# Ignore build artifacts but keep source
+!src/
+!include/
+!shaders/
+!README.md
+!LICENSE
+!CMakeLists.txt
+!*.h
+!*.cpp
+!*.c
+!*.hpp
+!*.glsl
+!*.hlsl
+!*.md
