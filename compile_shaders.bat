@@ -10,7 +10,7 @@ if %errorlevel% neq 0 (
 )
 echo Vertex shader compiled successfully
 
-glslc shaders/raymarcher.frag -o shaders/raymarcher.frag.spv
+glslc shaders/raytracer.frag -o shaders/raytracer.frag.spv
 if %errorlevel% neq 0 (
     echo Failed to compile fragment shader
     exit /b 1
