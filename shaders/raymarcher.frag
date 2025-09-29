@@ -1,9 +1,7 @@
 #version 450
-
 layout(location = 0) in vec2 fragCoord;
 layout(location = 0) out vec4 outColor;
 
-// Uniforms for camera and time
 layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
@@ -15,66 +13,89 @@ layout(binding = 0) uniform UniformBufferObject {
     vec3 cameraUp;
 } ubo;
 
-// Simple sphere SDF for testing
-float voxelSDF(vec3 p) {
-    return length(p) - 1.0; // Sphere with radius 1 at origin
-}
+// Hit information
+struct HitInfo {
+    bool hit;
+    float t;
+    vec3 position;
+    vec3 normal;
+    vec3 color;
+};
 
-// Raymarching function
-vec3 raymarch(vec3 rayOrigin, vec3 rayDir) {
-    float depth = 0.0;
-    vec3 color = vec3(0.0);
+// Sphere intersection
+HitInfo intersectSphere(vec3 rayOrigin, vec3 rayDir, vec3 center, float radius, vec3 color) {
+    HitInfo info;
+    info.hit = false;
+    info.color = color;
     
-    for (int i = 0; i < 64; i++) {
-        vec3 p = rayOrigin + rayDir * depth;
-        float dist = voxelSDF(p);
-        
-        if (dist < 0.01) {
-            // Hit! Calculate simple lighting
-            vec3 normal = normalize(vec3(
-                voxelSDF(p + vec3(0.01, 0, 0)) - voxelSDF(p - vec3(0.01, 0, 0)),
-                voxelSDF(p + vec3(0, 0.01, 0)) - voxelSDF(p - vec3(0, 0.01, 0)),
-                voxelSDF(p + vec3(0, 0, 0.01)) - voxelSDF(p - vec3(0, 0, 0.01))
-            ));
-            
-            vec3 lightDir = normalize(vec3(1, 1, 1));
-            float lighting = max(dot(normal, lightDir), 0.1);
-            
-            // Color based on position
-            color = mix(vec3(0.8, 0.4, 0.2), vec3(0.2, 0.8, 0.4), sin(p.x + p.y + p.z));
-            color *= lighting;
-            break;
+    vec3 oc = rayOrigin - center;
+    float a = dot(rayDir, rayDir);
+    float b = 2.0 * dot(oc, rayDir);
+    float c = dot(oc, oc) - radius * radius;
+    float discriminant = b * b - 4.0 * a * c;
+    
+    if (discriminant > 0.0) {
+        float t = (-b - sqrt(discriminant)) / (2.0 * a);
+        if (t > 0.001) {
+            info.hit = true;
+            info.t = t;
+            info.position = rayOrigin + t * rayDir;
+            info.normal = normalize(info.position - center);
         }
-        
-        depth += dist;
-        if (depth > 50.0) break; // Max distance
     }
     
-    return color;
+    return info;
+}
+
+// Calculate lighting
+vec3 calculateLighting(HitInfo hit) {
+    vec3 lightPos = vec3(5.0, 8.0, 0.0);
+    vec3 lightDir = normalize(lightPos - hit.position);
+    
+    // Ambient
+    vec3 ambient = 0.2 * hit.color;
+    
+    // Diffuse
+    float diff = max(dot(hit.normal, lightDir), 0.0);
+    vec3 diffuse = diff * hit.color;
+    
+    // Specular
+    vec3 viewDir = normalize(ubo.cameraPos - hit.position);
+    vec3 reflectDir = reflect(-lightDir, hit.normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+    vec3 specular = vec3(0.5) * spec;
+    
+    return ambient + diffuse + specular;
 }
 
 void main() {
-    // Convert fragment coord to screen space [-1, 1]
-    vec2 uv = (fragCoord * 2.0 - 1.0) * vec2(ubo.resolution.x / ubo.resolution.y, -1.0);
+    // Pixel coordinates from 0 to 1 (flip Y)
+    vec2 uv = vec2(fragCoord.x, 1.0 - fragCoord.y);
     
-    // Manually construct ray direction using camera vectors
-    float fov = 45.0; // degrees
-    float fovRadians = radians(fov);
-    float tanHalfFov = tan(fovRadians * 0.5);
+    float aspectRatio = ubo.resolution.x / ubo.resolution.y;
+    float fovScale = tan(radians(45.0) * 0.5);
     
+    // Generate ray direction
+    vec3 rayOrigin = ubo.cameraPos;
     vec3 rayDir = normalize(
         ubo.cameraForward + 
-        uv.x * tanHalfFov * ubo.cameraRight + 
-        uv.y * tanHalfFov * ubo.cameraUp
+        (-1.0 + 2.0 * uv.x) * aspectRatio * fovScale * ubo.cameraRight + 
+        (-1.0 + 2.0 * uv.y) * fovScale * ubo.cameraUp
     );
     
-    vec3 rayOrigin = ubo.cameraPos;
+    HitInfo hit = intersectSphere(rayOrigin, rayDir, vec3(0.0, 0.0, -5.0), 1.0, vec3(1.0, 0.3, 0.3));
     
-    // Perform raymarching
-    vec3 color = raymarch(rayOrigin, rayDir);
+    vec3 color;
+    if (hit.hit) {
+        color = calculateLighting(hit);
+    } else {
+        // Sky gradient
+        float t = 0.5 * (rayDir.y + 1.0);
+        color = mix(vec3(1.0), vec3(0.5, 0.7, 1.0), t);
+    }
     
-    // Add some fog/atmosphere
-    color = mix(color, vec3(0.5, 0.7, 1.0), smoothstep(0.0, 50.0, length(rayOrigin)));
+    // Gamma correction
+    color = pow(color, vec3(1.0/2.2));
     
     outColor = vec4(color, 1.0);
 }
