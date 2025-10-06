@@ -144,9 +144,6 @@ void VulkanRenderer::pickPhysicalDevice() {
 void VulkanRenderer::createLogicalDevice() {
     std::cout << "5. Creating Logical Device...\n";
 
-    // WHAT IS THIS: Creates an interface to your physical GPU
-    // The logical device is what you use to actually talk to the GPU
-
     QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -227,7 +224,7 @@ void VulkanRenderer::createSwapChain(GLFWwindow* window) {
     VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR; // V-sync
     for (const auto& availablePresentMode : presentModes) {
         if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-            presentMode = availablePresentMode; // Triple buffering if available
+            presentMode = availablePresentMode;
             break;
         }
     }
@@ -395,7 +392,7 @@ void VulkanRenderer::createGraphicsPipeline() {
 
     // Load shaders
     auto vertShaderCode = readFile("shaders/quad.vert.spv");
-    auto fragShaderCode = readFile("shaders/raymarcher.frag.spv");
+    auto fragShaderCode = readFile("shaders/raytracer.frag.spv");
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
